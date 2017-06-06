@@ -26,7 +26,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
  protected String doInBackground(String[] p1)
  {
   int fontSize=Integer.parseInt(BL.getBL().fontSizeString);
-  BL.getBL().pxlsString="";
+  BL.getBL().pxlsString=new StringBuilder("");
   
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
   int picWidth=bp.getWidth(),picHeight=bp.getHeight();
@@ -42,6 +42,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
     {
      for(int x1=0;x1<fontSize;x1++)
      {
+      if(isCancelled())return "false";
       x2=x*fontSize+x1;y2=y*fontSize+y1;
       if(x2>=picWidth||y2>=picHeight)
        continue;
@@ -56,15 +57,15 @@ public class MyTask extends AsyncTask<String,Integer,String>
     rgb[1]=rgb[1]/(fontSize*fontSize);
     rgb[2]=rgb[2]/(fontSize*fontSize);
     ++count2;
-    BL.getBL().pxlsString+=String.format(BL.getBL().pixelString,Utils.getHexC(rgb[0],rgb[1],rgb[2]),BL.getBL().wordString);
-    if((x+1)%57==0)
+    BL.getBL().pxlsString.append(String.format(BL.getBL().pixelString,rgb[0],rgb[1],rgb[2],BL.getBL().wordString));
+    if((x+1)%(xb/10)==0)
      publishProgress(1,max,y*xb+x,count1,xb*yb*fontSize*fontSize,count2,xb*yb);
     rgb[0]=0;rgb[1]=0;rgb[2]=0;
    }
-   BL.getBL().pxlsString+="<br>";
+   BL.getBL().pxlsString.append("<br>");
   }
   publishProgress(1,max,max,count1,xb*yb*fontSize*fontSize,count2,xb*yb);
-  String result=String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString,BL.getBL().pxlsString);
+  String result=String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString,BL.getBL().pxlsString.toString());
   String r=""+Utils.createHtmlFile(result,BL.getBL().outPathString);
   return r;
  }
@@ -100,6 +101,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
   {
    ma.toast("生成失败");
   }
+  ma.changeBtnVisibility();
  }
  
  

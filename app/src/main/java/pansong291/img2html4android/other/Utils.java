@@ -57,6 +57,17 @@ public class Utils
   return true;
  }
  
+ //创建文件夹
+ public static boolean createFolder(String s)
+ {
+  File f=new File(s);
+  if(!f.exists())
+  {
+   return f.mkdir();
+  }
+  return false;
+ }
+ 
  //获取所有子目录
  public static ArrayList<String> getAllSonFolder(String s)
  {

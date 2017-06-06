@@ -60,15 +60,14 @@
 
 		</LinearLayout>
 
-		<Button
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="其它"
-			android:background="@drawable/button_background"
-			android:id="@+id/button_dialog_other"
-			android:textColor="#000000"
-			style="?android:attr/buttonStyleSmall"/>
-
+   <ImageView
+    android:layout_height="40dp"
+    android:layout_width="40dp"
+    android:clickable="true"
+    android:src="@drawable/folder_new"
+    android:background="@drawable/button_background"
+    android:id="@+id/imageview_dialog_new_folder"/>
+   
 	</LinearLayout>
 
 	<RelativeLayout

@@ -35,6 +35,7 @@
 			android:layout_height="match_parent"
 			android:layout_width="wrap_content"
 			android:text="浏览"
+			android:onClick="onChoosePathClick"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:id="@+id/main_btn_picpath"/>
@@ -69,6 +70,7 @@
 			android:layout_height="match_parent"
 			android:layout_width="wrap_content"
 			android:text="浏览"
+			android:onClick="onChoosePathClick"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:id="@+id/main_btn_outpath"/>
@@ -235,6 +237,17 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textColor="#000000"
 		android:id="@+id/main_btn_do"/>
+
+	<Button
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="取消"
+		android:onClick="onCancelBtnClick"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="#000000"
+		android:id="@+id/main_btn_cancel"
+		android:visibility="gone"/>
 
 	<TextView
 		android:layout_height="wrap_content"

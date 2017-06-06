@@ -8,10 +8,19 @@ public class BL
  
  //数据
  public String htmlString="<html><head><meta charset=\"%1$s\"><title>%2$s</title><style type=\"text/css\">body{margin: 0px; padding: 0px; line-height:100%%; letter-spacing:0px; text-align: center; min-width: %3$s;width: auto !important; font-size: %4$s; background-color: %5$s; font-family: %6$s;}</style></head><body><div>%7$s</div></body></html>",
- pixelString="<font color=\"%1$s\">%2$s</font>",pxlsString,
+ pixelString="<font color=\"#%02x%02x%02x\">%s</font>",
  picPathString,outPathString,wordString,
  codeString,titleString,fontSizeString,
  backColorString,fontTypeString;
+ public StringBuilder pxlsString;
+ 
+ public boolean isAnyOneNull()
+ {
+  return (picPathString.length()<1||outPathString.length()<1
+  ||wordString.length()<1||codeString.length()<1||
+  titleString.length()<1||fontSizeString.length()<1||
+  backColorString.length()<1||fontTypeString.length()<1);
+ }
  
  //单例模式
  private static BL bl=new BL();
@@ -21,6 +30,19 @@ public class BL
  public static BL getBL()
  {
   return bl;
+ }
+ 
+ //路径
+ private String strPicPath="/storage/x.jpg",strOutPath="/storage";
+ public String getPicPath(){return strPicPath;}
+ public void setPicPath(String s)
+ {
+  strPicPath=s;
+ }
+ public String getOutPath(){return strOutPath;}
+ public void setOutPath(String s)
+ {
+  strOutPath=s;
  }
  
  //当前目录
