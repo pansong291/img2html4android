@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:padding="10dp"
+	android:gravity="center_horizontal">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="图片路径："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:maxLines="1"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="/storage/sdcard1/DCIM/Screenshots/IMG_20170606_195936.jpg"
+			android:id="@+id/main_edit_picpath"/>
+
+		<Button
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="match_parent"
+			android:layout_width="wrap_content"
+			android:text="浏览"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:id="@+id/main_btn_picpath"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="输出路径："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:maxLines="1"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="/storage/emulated/0/DCIM/Screenshots"
+			android:id="@+id/main_edit_outpath"/>
+
+		<Button
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="match_parent"
+			android:layout_width="wrap_content"
+			android:text="浏览"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:id="@+id/main_btn_outpath"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="像素文字："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="燚"
+			android:maxLength="1"
+			android:id="@+id/main_edit_word"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="网页编码："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="utf-8"
+			android:id="@+id/main_edit_code"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="网页标题："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="TITLE"
+			android:id="@+id/main_edit_title"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="字体大小："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="10"
+			android:id="@+id/main_edit_fontsize"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="背景颜色："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="#000000"
+			android:id="@+id/main_edit_backcolor"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="字体样式："
+			android:textColor="#000000"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#000000"
+			android:text="monospace"
+			android:id="@+id/main_edit_fonttype"/>
+
+	</LinearLayout>
+
+	<ProgressBar
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:id="@+id/main_probar"/>
+
+	<Button
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="生成HTML"
+		android:onClick="onDoBtnClick"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="#000000"
+		android:id="@+id/main_btn_do"/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:id="@+id/main_txt_pro"
+		android:textColor="#000000"
+		android:gravity="center"/>
+
+</LinearLayout>
+
