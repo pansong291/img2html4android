@@ -46,7 +46,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
     {
      for(int x1=0;x1<fontSize;x1++)
      {
-      if(isCancelled())return "操作取消";
+      if(isCancelled())return "取消操作";
       x2=x*fontSize+x1;y2=y*fontSize+y1;
       if(x2>=picWidth||y2>=picHeight)
        continue;
@@ -67,16 +67,14 @@ public class MyTask extends AsyncTask<String,Integer,String>
     {
      return "内存溢出异常，请适当调大字体大小";
     }
-    try{
-     if((x+1)%(xb/10)==0)
-      publishProgress(0,max,y*xb+x,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
-    }catch(ArithmeticException ae)
-    {
-     
-    }
     rgb[0]=0;rgb[1]=0;rgb[2]=0;
    }
    BL.getBL().pxlsString.append("<br>");
+   try{
+    publishProgress(0,max,(y+1)*xb,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+   }catch(ArithmeticException ae)
+   {
+   }
   }
   publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
   String result;
