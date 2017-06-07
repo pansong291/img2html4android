@@ -36,7 +36,7 @@ public class Utils
  }
  
  //将文本以文件写出
- public static boolean createHtmlFile(String s,String p)
+ public static String createHtmlFile(String s,String p)
  {
   File dir=new File(p);
   if(!dir.exists())
@@ -52,9 +52,9 @@ public class Utils
    bw.close();
   }catch(Exception e)
   {
-   return false;
+   return e.getMessage();
   }
-  return true;
+  return "true";
  }
  
  //创建文件夹

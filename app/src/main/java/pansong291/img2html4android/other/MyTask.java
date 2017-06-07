@@ -21,6 +21,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
  protected void onPreExecute()
  {
   ma.getProgressBar().setVisibility(0);
+  ma.getProgressBar().setProgress(0);
   ma.changeBtnVisibility();
  }
  
@@ -45,7 +46,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
     {
      for(int x1=0;x1<fontSize;x1++)
      {
-      if(isCancelled())return "false";
+      if(isCancelled())return "操作取消";
       x2=x*fontSize+x1;y2=y*fontSize+y1;
       if(x2>=picWidth||y2>=picHeight)
        continue;
@@ -60,16 +61,32 @@ public class MyTask extends AsyncTask<String,Integer,String>
     rgb[1]=rgb[1]/(fontSize*fontSize);
     rgb[2]=rgb[2]/(fontSize*fontSize);
     ++count2;
-    BL.getBL().pxlsString.append(String.format(BL.getBL().pixelString,rgb[0],rgb[1],rgb[2],BL.getBL().wordString));
-    if((x+1)%(xb/10)==0)
-     publishProgress(0,max,y*xb+x,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+    try{
+     BL.getBL().pxlsString.append(String.format(BL.getBL().pixelString,rgb[0],rgb[1],rgb[2],BL.getBL().wordString));
+    }catch(OutOfMemoryError oome)
+    {
+     return "内存溢出异常，请适当调大字体大小";
+    }
+    try{
+     if((x+1)%(xb/10)==0)
+      publishProgress(0,max,y*xb+x,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+    }catch(ArithmeticException ae)
+    {
+     
+    }
     rgb[0]=0;rgb[1]=0;rgb[2]=0;
    }
    BL.getBL().pxlsString.append("<br>");
   }
   publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
-  String result=String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString,BL.getBL().pxlsString.toString());
-  String r=""+Utils.createHtmlFile(result,BL.getBL().outPathString);
+  String result;
+  try{
+   result=String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString,BL.getBL().pxlsString.toString());
+  }catch(OutOfMemoryError oome)
+  {
+   return "内存溢出异常，请适当调大字体大小";
+  }
+  String r=Utils.createHtmlFile(result,BL.getBL().outPathString);
   publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
   return r;
  }
@@ -96,20 +113,20 @@ public class MyTask extends AsyncTask<String,Integer,String>
  @Override
  protected void onCancelled(String result)
  {
-  ma.getProtxt().append("\n已取消操作");
+  ma.getProtxt().append("\n已"+result);
  }
 
  @Override
  protected void onPostExecute(String result)
  {
-  if(result.startsWith("t"))
+  if(result.equals("true"))
   {
    ma.getProtxt().append("\nHTML生成完毕，链接已复制到剪贴板，请在浏览器中粘贴打开");
    ClipboardManager cm=(ClipboardManager)ma.getSystemService(ma.CLIPBOARD_SERVICE);
    cm.setText("file://"+BL.getBL().outPathString+"/"+BL.getBL().fileNameString);
   }else
   {
-   ma.getProtxt().append("\n生成失败");
+   ma.getProtxt().append("\n生成失败\n"+result);
   }
   ma.changeBtnVisibility();
  }

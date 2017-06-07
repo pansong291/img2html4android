@@ -172,7 +172,6 @@ public class MainActivity extends Zactivity
    })
    .create();
    
-  mt=new MyTask(this);
  }
  
  public void onChoosePathClick(View v)
@@ -220,7 +219,8 @@ public class MainActivity extends Zactivity
   spPutString(FONT_SIZE,BL.getBL().fontSizeString);
   spPutString(BACK_COLOR,BL.getBL().backColorString);
   spPutString(FONT_TYPE,BL.getBL().fontTypeString);
-  
+
+  mt=new MyTask(this);
   mt.execute();
   
  }
