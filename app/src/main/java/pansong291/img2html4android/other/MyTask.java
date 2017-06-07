@@ -95,7 +95,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
  @Override
  protected void onCancelled(String result)
  {
-  ma.toast("已取消");
+  ma.getProtxt().append("\n已取消操作");
  }
 
  @Override
@@ -108,7 +108,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
    cm.setText("file://"+BL.getBL().outPathString+"/"+BL.getBL().fileNameString);
   }else
   {
-   ma.toast("生成失败");
+   ma.getProtxt().append("\n生成失败");
   }
   ma.changeBtnVisibility();
  }
