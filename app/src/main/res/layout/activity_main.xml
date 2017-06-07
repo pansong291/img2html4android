@@ -24,7 +24,7 @@
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
 			android:layout_weight="1.0"
-			android:maxLines="1"
+			android:maxLines="2"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:id="@+id/main_edit_picpath"/>
@@ -58,10 +58,9 @@
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
 			android:layout_weight="1.0"
-			android:maxLines="1"
+			android:maxLines="2"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
-			android:text="/storage/sdcard0/DCIM/Screenshots"
 			android:id="@+id/main_edit_outpath"/>
 
 		<Button
@@ -97,6 +96,7 @@
 			android:textColor="#000000"
 			android:text="燚"
 			android:maxLength="1"
+			android:maxLines="1"
 			android:id="@+id/main_edit_word"/>
 
 	</LinearLayout>
@@ -121,6 +121,7 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:text="utf-8"
+			android:maxLines="1"
 			android:id="@+id/main_edit_code"/>
 
 	</LinearLayout>
@@ -145,6 +146,7 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:text="TITLE"
+			android:maxLines="1"
 			android:id="@+id/main_edit_title"/>
 
 	</LinearLayout>
@@ -169,6 +171,8 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:text="10"
+			android:digits="1234567890"
+			android:maxLines="1"
 			android:id="@+id/main_edit_fontsize"/>
 
 	</LinearLayout>
@@ -193,6 +197,9 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:text="#000000"
+			android:digits="0123456789abcdef#"
+			android:maxLines="1"
+			android:maxLength="7"
 			android:id="@+id/main_edit_backcolor"/>
 
 	</LinearLayout>
@@ -217,6 +224,7 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:text="monospace"
+			android:maxLines="1"
 			android:id="@+id/main_edit_fonttype"/>
 
 	</LinearLayout>
@@ -246,7 +254,8 @@
 		style="?android:attr/progressBarStyleHorizontal"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:id="@+id/main_probar"/>
+		android:id="@+id/main_probar"
+		android:visibility="gone"/>
 
 	<TextView
 		android:layout_height="wrap_content"

@@ -2,7 +2,9 @@ package pansong291.img2html4android.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,7 +33,7 @@ public class MainActivity extends Zactivity
  
  TextView protxt;
 
- //对话框里的视图
+ //选择路径对话框里的视图
  TextView txtCurrentPath;
  View viewDialog,viewGoBack,viewNewFolder;
  AlertDialog listDialog;
@@ -51,6 +53,25 @@ public class MainActivity extends Zactivity
   super.onCreate(savedInstanceState);
   setContentView(R.layout.activity_main);
   
+  int oldVerCode=sp.getInt(V_CODE,99999999);
+  if(oldVerCode<VERSION_CODE)
+  {
+   //用户更新了本应用
+   new AlertDialog.Builder(this)
+    .setTitle("版本升级")
+    .setMessage(String.format("感谢您对本应用的支持！\n本应用已成功升级到%1$s版本。\n%2$s",VERSION_NAME,getString(R.string.update_msg)))
+    .setPositiveButton("确定",null)
+    .show();
+  }else if(oldVerCode==99999999)
+  {
+   new AlertDialog.Builder(this)
+    .setTitle("声明")
+    .setMessage(String.format("感谢您安装本应用！\n%s",getString(R.string.hello_user)))
+    .setPositiveButton("确定",null)
+    .show();
+  }
+  sp.edit().putInt(V_CODE,VERSION_CODE).commit();
+  
   picPathEditText=(EditText)findViewById(R.id.main_edit_picpath);
   outPathEditText=(EditText)findViewById(R.id.main_edit_outpath);
   wordEditText=(EditText)findViewById(R.id.main_edit_word);
@@ -59,6 +80,15 @@ public class MainActivity extends Zactivity
   fontSizeEditText=(EditText)findViewById(R.id.main_edit_fontsize);
   backColorEditText=(EditText)findViewById(R.id.main_edit_backcolor);
   fontTypeEditText=(EditText)findViewById(R.id.main_edit_fonttype);
+  
+  picPathEditText.setText(sp.getString(PIC_PATH,""));
+  outPathEditText.setText(sp.getString(OUT_PATH,""));
+  wordEditText.setText(sp.getString(WORD,"燚"));
+  codeEditText.setText(sp.getString(CODE,"utf-8"));
+  titleEditText.setText(sp.getString(TITLE,""));
+  fontSizeEditText.setText(sp.getString(FONT_SIZE,"10"));
+  backColorEditText.setText(sp.getString(BACK_COLOR,"#000000"));
+  fontTypeEditText.setText(sp.getString(FONT_TYPE,"monospace"));
   
   picPathBtn=(Button)findViewById(R.id.main_btn_picpath);
   outPathBtn=(Button)findViewById(R.id.main_btn_outpath);
@@ -96,6 +126,7 @@ public class MainActivity extends Zactivity
      {
       picPathEditText.setText(f.getAbsolutePath());
       BL.getBL().setPicPath(f.getAbsolutePath());
+      spPutString(PIC_PATH,BL.getBL().getPicPath());
       listDialog.dismiss();
      }
     }
@@ -105,6 +136,24 @@ public class MainActivity extends Zactivity
    .setTitle("选择路径")
    .setView(viewDialog)
    .setNegativeButton("取消",null)
+   .setNeutralButton("其它选择器",new DialogInterface.OnClickListener()
+   {
+    @Override
+    public void onClick(DialogInterface p1, int p2)
+    {
+     if(!bolIsPicPath)
+     {
+      toast("请点击确定来选取输出路径");
+      return;
+     }
+     //调用其它文件选择器选择视频
+     //使用startActivityForResult是为了获取用户选择的文件
+     Intent it=new Intent(Intent.ACTION_PICK, 
+               MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+     it.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+     startActivityForResult(Intent.createChooser(it,"选择图片"),0);
+    }
+   })
    .setPositiveButton("确定",new DialogInterface.OnClickListener()
    {
     @Override
@@ -117,10 +166,13 @@ public class MainActivity extends Zactivity
      {
       BL.getBL().setOutPath(BL.getBL().getCurrentPath());
       outPathEditText.setText(BL.getBL().getOutPath());
+      spPutString(OUT_PATH,BL.getBL().getOutPath());
      }
     }
    })
    .create();
+   
+  mt=new MyTask(this);
  }
  
  public void onChoosePathClick(View v)
@@ -152,20 +204,51 @@ public class MainActivity extends Zactivity
   {
    toast("每个参数都不能为空");
    return;
+  }else if(BL.getBL().fontSizeString.equals("0"))
+  {
+   toast("字体大小不能为0");
+   return;
+  }else if(BL.getBL().backColorString.lastIndexOf("#")!=0||BL.getBL().backColorString.length()<7)
+  {
+   toast("背景颜色参数错误");
+   return;
   }
   
-  changeBtnVisibility();
+  spPutString(WORD,BL.getBL().wordString);
+  spPutString(CODE,BL.getBL().codeString);
+  spPutString(TITLE,BL.getBL().titleString);
+  spPutString(FONT_SIZE,BL.getBL().fontSizeString);
+  spPutString(BACK_COLOR,BL.getBL().backColorString);
+  spPutString(FONT_TYPE,BL.getBL().fontTypeString);
   
-  mt=new MyTask(this);
   mt.execute();
   
  }
  
  public void onCancelBtnClick(View v)
  {
-  mt.cancel(true);
+  if(!mt.isCancelled())mt.cancel(true);
   
   changeBtnVisibility();
+ }
+ 
+ //重写onActivityResult以获得你需要的信息
+ @Override
+ protected void onActivityResult(int requestCode,int resultCode,Intent data)
+ {
+  super.onActivityResult(requestCode,resultCode,data);
+  //此处的requestCode用于判断接收的Activity是不是你想要的那个
+  if(resultCode==RESULT_OK&&requestCode==0)
+  {
+   //获得图片的路径
+   BL.getBL().setPicPath(Utils.getAbsolutePath(this,data.getData(),MediaStore.Images.Media.DATA));
+   picPathEditText.setText(BL.getBL().getPicPath());
+   spPutString(PIC_PATH,BL.getBL().getPicPath());
+   listDialog.dismiss();
+  }else if(resultCode==RESULT_OK)
+  {
+   toast("请重新选择图片");
+  }
  }
  
  public void setListDataChange()

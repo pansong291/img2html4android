@@ -20,7 +20,8 @@ public class MyTask extends AsyncTask<String,Integer,String>
  @Override
  protected void onPreExecute()
  {
-  super.onPreExecute();
+  ma.getProgressBar().setVisibility(0);
+  ma.changeBtnVisibility();
  }
  
  @Override
