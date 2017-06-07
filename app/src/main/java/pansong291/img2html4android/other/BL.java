@@ -11,7 +11,7 @@ public class BL
  pixelString="<font color=\"#%02x%02x%02x\">%s</font>",
  picPathString,outPathString,wordString,
  codeString,titleString,fontSizeString,
- backColorString,fontTypeString;
+ backColorString,fontTypeString,fileNameString;
  public StringBuilder pxlsString;
  
  public boolean isAnyOneNull()

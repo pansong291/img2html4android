@@ -27,7 +27,6 @@
 			android:maxLines="1"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
-			android:text="/storage/sdcard1/DCIM/Screenshots/IMG_20170606_195936.jpg"
 			android:id="@+id/main_edit_picpath"/>
 
 		<Button
@@ -62,7 +61,7 @@
 			android:maxLines="1"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
-			android:text="/storage/emulated/0/DCIM/Screenshots"
+			android:text="/storage/sdcard0/DCIM/Screenshots"
 			android:id="@+id/main_edit_outpath"/>
 
 		<Button
@@ -222,12 +221,6 @@
 
 	</LinearLayout>
 
-	<ProgressBar
-		style="?android:attr/progressBarStyleHorizontal"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:id="@+id/main_probar"/>
-
 	<Button
 		style="?android:attr/buttonBarButtonStyle"
 		android:layout_height="wrap_content"
@@ -248,6 +241,12 @@
 		android:textColor="#000000"
 		android:id="@+id/main_btn_cancel"
 		android:visibility="gone"/>
+
+	<ProgressBar
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:id="@+id/main_probar"/>
 
 	<TextView
 		android:layout_height="wrap_content"

@@ -44,8 +44,8 @@ public class Utils
    dir.mkdir();
   }
 
-  String fileName="Img_"+System.currentTimeMillis()+".html";
-  File file=new File(dir,fileName);
+  BL.getBL().fileNameString="Img_"+System.currentTimeMillis()+".html";
+  File file=new File(dir,BL.getBL().fileNameString);
   try{
    BufferedWriter bw=new BufferedWriter(new FileWriter(file));
    bw.write(s);
