@@ -11,6 +11,12 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal"
+		android:id="@+id/main_gg"/>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
 		android:gravity="center_vertical">
 
 		<TextView

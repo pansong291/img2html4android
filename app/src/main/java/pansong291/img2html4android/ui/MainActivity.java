@@ -10,14 +10,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.io.File;
 import pansong291.img2html4android.R;
 import pansong291.img2html4android.other.BL;
+import pansong291.img2html4android.other.MyProclamation;
 import pansong291.img2html4android.other.MyTask;
+import pansong291.img2html4android.other.MyUpdata;
 import pansong291.img2html4android.other.Utils;
+import pansong291.img2html4android.other.MyUpdataDialogListener;
 
 public class MainActivity extends Zactivity 
 {
@@ -64,6 +68,7 @@ public class MainActivity extends Zactivity
     .show();
   }else if(oldVerCode==99999999)
   {
+   //用户第一次安装本应用
    new AlertDialog.Builder(this)
     .setTitle("声明")
     .setMessage(String.format("感谢您安装本应用！\n%s",getString(R.string.hello_user)))
@@ -71,6 +76,14 @@ public class MainActivity extends Zactivity
     .show();
   }
   sp.edit().putInt(V_CODE,VERSION_CODE).commit();
+  
+  //公告相关
+  LinearLayout llt=(LinearLayout)findViewById(R.id.main_gg);
+  new MyProclamation(this,"RyOATtQ",llt).start();
+  
+  //更新相关
+  if(sp.getBoolean("自动检查更新的选项",true)||sp.getBoolean("qzGX",false))
+   new MyUpdata(this,"RyOAlwR",new MyUpdataDialogListener(this)).checkNow(false,null);
   
   picPathEditText=(EditText)findViewById(R.id.main_edit_picpath);
   outPathEditText=(EditText)findViewById(R.id.main_edit_outpath);
