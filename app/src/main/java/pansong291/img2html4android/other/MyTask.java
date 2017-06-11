@@ -22,6 +22,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
  {
   ma.getProgressBar().setVisibility(0);
   ma.getProgressBar().setProgress(0);
+  ma.getProtxt().setText("");
   ma.changeBtnVisibility();
  }
  
@@ -30,11 +31,16 @@ public class MyTask extends AsyncTask<String,Integer,String>
  {
   long startTime=System.currentTimeMillis();
   int fontSize=Integer.parseInt(BL.getBL().fontSizeString);
-  BL.getBL().pxlsString=new StringBuilder("");
   
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
   int picWidth=bp.getWidth(),picHeight=bp.getHeight();
   int xb=picWidth/fontSize,yb=picHeight/fontSize;
+  try{
+   BL.getBL().pxlsString=new StringBuilder(yb*(xb*(BL.getBL().pixelString.length()-7)+4));
+  }catch(OutOfMemoryError oome)
+  {
+   return "内存溢出异常01，请适当调大字体大小\n"+oome.getMessage();
+  }
   
   int cutColor,rgb[]=new int[]{0,0,0},x2,y2,max=xb*yb,count1=0,count2=0;
   
@@ -65,7 +71,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
      BL.getBL().pxlsString.append(String.format(BL.getBL().pixelString,rgb[0],rgb[1],rgb[2],BL.getBL().wordString));
     }catch(OutOfMemoryError oome)
     {
-     return "内存溢出异常，请适当调大字体大小";
+     return "内存溢出异常02，请适当调大字体大小\n"+oome.getMessage();
     }
     rgb[0]=0;rgb[1]=0;rgb[2]=0;
    }
@@ -77,12 +83,18 @@ public class MyTask extends AsyncTask<String,Integer,String>
    }
   }
   publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+  if(bp!=null&&!bp.isRecycled())
+  {
+   // 回收并且置为null
+   bp.recycle();
+   bp=null;
+  }
   String result;
   try{
    result=String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString,BL.getBL().pxlsString.toString());
   }catch(OutOfMemoryError oome)
   {
-   return "内存溢出异常，请适当调大字体大小";
+   return "内存溢出异常03，请适当调大字体大小\n"+oome.getMessage();
   }
   String r=Utils.createHtmlFile(result,BL.getBL().outPathString);
   publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
