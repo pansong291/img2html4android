@@ -96,6 +96,8 @@ public class MainActivity extends Zactivity
   
   picPathEditText.setText(sp.getString(PIC_PATH,""));
   outPathEditText.setText(sp.getString(OUT_PATH,""));
+  BL.getBL().setPicPath(picPathEditText.getText().toString());
+  BL.getBL().setOutPath(outPathEditText.getText().toString());
   wordEditText.setText(sp.getString(WORD,"燚"));
   codeEditText.setText(sp.getString(CODE,"utf-8"));
   titleEditText.setText(sp.getString(TITLE,""));
