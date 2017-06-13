@@ -82,7 +82,7 @@ public class MainActivity extends Zactivity
   new MyProclamation(this,"RyOATtQ",llt).start();
   
   //更新相关
-  if(sp.getBoolean("自动检查更新的选项",true)||sp.getBoolean("qzGX",false))
+  if(sp.getBoolean("自动检查更新的选项",true)||sp.getBoolean(QZGX,false))
    new MyUpdata(this,"RyOAlwR",new MyUpdataDialogListener(this)).checkNow(false,null);
   
   picPathEditText=(EditText)findViewById(R.id.main_edit_picpath);

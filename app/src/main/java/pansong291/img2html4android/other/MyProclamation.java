@@ -41,7 +41,7 @@ public class MyProclamation extends Proclamation
   
   //*****此处做个标记，qzGX这个参数应当为整型，以后再作修改
   
-  spe.putBoolean("qzGX",getForceUpdata()).commit();
+  spe.putBoolean(act.QZGX,getForceUpdata()).commit();
   txtvw=new TextView(act);
   txtvw.setWidth(llt.getWidth());
   txtvw.setClickable(true);

@@ -1,6 +1,8 @@
 package pansong291.img2html4android.other;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import pansong291.crash.ActivityControl;
 import pansong291.img2html4android.ui.Zactivity;
 
@@ -25,13 +27,10 @@ public class MyUpdataDialogListener implements DialogInterface.OnClickListener
   switch(p2)
   {
    case -1:
-//	MyWebView.downloadfile(act,upd.getDownloadUrl(),
-//	act.sp.getString("edt1","/mnt/sdcard/"),
-//	act.getString(R.string.app_name)+"v"+upd.getNewVersion()+".apk",true);
-    act.toast("下载地址为"+upd.getDownloadUrl());
-	break;
+//    act.toast("下载地址为"+upd.getDownloadUrl());
+    act.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(upd.getDownloadUrl())));
    case -2:
-	if(act.sp.getBoolean("qzGX",false))
+	if(act.sp.getBoolean(act.QZGX,false))
 	{
 	 ActivityControl.getActivityControl().finishProgrom();
 	}

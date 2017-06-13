@@ -12,11 +12,11 @@ public class Zactivity extends Activity
 {
  int VERSION_CODE;
  String VERSION_NAME;
- String PIC_PATH="picPath",OUT_PATH="outPath",
+ public final String PIC_PATH="picPath",OUT_PATH="outPath",
         WORD="word",CODE="code",TITLE="title",
         FONT_SIZE="fontSize",BACK_COLOR="backColor",
         FONT_TYPE="fontType";
- String V_CODE="v_code";
+ public final String V_CODE="v_code",QZGX="qzGX";
  
  public SharedPreferences sp;
  
