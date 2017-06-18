@@ -3,6 +3,7 @@ package pansong291.img2html4android.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -20,11 +21,13 @@ import pansong291.img2html4android.other.BL;
 import pansong291.img2html4android.other.MyProclamation;
 import pansong291.img2html4android.other.MyTask;
 import pansong291.img2html4android.other.MyUpdata;
-import pansong291.img2html4android.other.Utils;
 import pansong291.img2html4android.other.MyUpdataDialogListener;
+import pansong291.img2html4android.other.Utils;
 
 public class MainActivity extends Zactivity 
 {
+ int VERSION_CODE;
+ String VERSION_NAME;
  
  //主视图控件
  EditText picPathEditText,outPathEditText,
@@ -56,6 +59,14 @@ public class MainActivity extends Zactivity
  {
   super.onCreate(savedInstanceState);
   setContentView(R.layout.activity_main);
+  
+  try{
+   PackageInfo pi=getPackageManager().getPackageInfo(getPackageName(),0);
+   VERSION_CODE=pi.versionCode;
+   VERSION_NAME=pi.versionName;
+  }catch(Exception e)
+  {
+  }
   
   int oldVerCode=sp.getInt(V_CODE,99999999);
   if(oldVerCode<VERSION_CODE)
