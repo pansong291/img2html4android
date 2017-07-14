@@ -33,7 +33,7 @@ public class BL
  }
  
  //路径
- private String strPicPath="/storage/sdcard0/x.jpg",strOutPath="/storage/sdcard0";
+ private String strPicPath="/storage/emulated/0/x.jpg",strOutPath="/storage/emulated/0";
  public String getPicPath(){return strPicPath;}
  public void setPicPath(String s)
  {
