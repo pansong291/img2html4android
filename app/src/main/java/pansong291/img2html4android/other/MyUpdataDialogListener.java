@@ -3,7 +3,7 @@ package pansong291.img2html4android.other;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import pansong291.crash.ActivityControl;
+import pansong291.crash.ASControl;
 import pansong291.img2html4android.ui.Zactivity;
 
 public class MyUpdataDialogListener implements DialogInterface.OnClickListener
@@ -32,7 +32,7 @@ public class MyUpdataDialogListener implements DialogInterface.OnClickListener
    case -2:
 	if(act.sp.getBoolean(act.QZGX,false))
 	{
-	 ActivityControl.getActivityControl().finishProgrom();
+	 ASControl.getASControl().finishProgrom();
 	}
 	break;
 //   case -3:

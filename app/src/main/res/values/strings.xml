@@ -3,7 +3,7 @@
 
     <string name="app_name">Img2Html4Android</string>
     <string name="hello_user">本应用根据github用户xlzd的img2html开源项目改编，原项目地址：\nhttps://github.com/xlzd/img2html</string>
-    <string name="update_msg">1.0版诞生\n\本应用根据github用户xlzd的img2html开源项目改编，原项目地址：\nhttps://github.com/xlzd/img2html</string>
+    <string name="update_msg">1.0.1-beta\n\n*修复点击浏览按钮崩溃问题\n*解决内存溢出问题\n\n1.0-beta版诞生\n\n*本应用根据github用户xlzd的img2html开源项目改编，原项目地址：\nhttps://github.com/xlzd/img2html\n*优化算法，提升生成速度</string>
 
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#9934b6e4</color>

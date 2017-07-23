@@ -5,7 +5,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.text.ClipboardManager;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import pansong291.img2html4android.ui.MainActivity;
+import java.io.IOException;
 
 public class MyTask extends AsyncTask<String,Integer,String>
 {
@@ -35,12 +39,35 @@ public class MyTask extends AsyncTask<String,Integer,String>
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
   int picWidth=bp.getWidth(),picHeight=bp.getHeight();
   int xb=picWidth/fontSize,yb=picHeight/fontSize;
+  
+  int strBlderLength=yb*(xb*(BL.getBL().pixelString.length()-7)+4);
+  if(strBlderLength/BL.getBL().cutCount!=0)
+   strBlderLength/=BL.getBL().cutCount;
+  
   try{
-   BL.getBL().pxlsString=new StringBuilder(yb*(xb*(BL.getBL().pixelString.length()-7)+4));
+   BL.getBL().pxlsString=new StringBuilder(strBlderLength);
   }catch(OutOfMemoryError oome)
   {
-   return "内存溢出异常01，请适当调大字体大小\n"+oome.getMessage();
+   return "内存溢出异常01，请分多次重试\n"+oome.getMessage();
   }
+  
+  File dir=new File(BL.getBL().outPathString);
+  if(!dir.exists())
+  {
+   dir.mkdir();
+  }
+
+  BL.getBL().fileNameString="Img_"+System.currentTimeMillis()+".html";
+  File file=new File(dir,BL.getBL().fileNameString);
+  BufferedWriter bw=null;
+  try{
+   bw=new BufferedWriter(new FileWriter(file));
+  }catch(IOException e)
+  {
+   return "无法写入外部文件\n"+e.getMessage();
+  }
+  
+  BL.getBL().pxlsString.append(String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString));
   
   int cutColor,rgb[]=new int[]{0,0,0},x2,y2,max=xb*yb,count1=0,count2=0;
   
@@ -71,7 +98,18 @@ public class MyTask extends AsyncTask<String,Integer,String>
      BL.getBL().pxlsString.append(String.format(BL.getBL().pixelString,rgb[0],rgb[1],rgb[2],BL.getBL().wordString));
     }catch(OutOfMemoryError oome)
     {
-     return "内存溢出异常02，请适当调大字体大小\n"+oome.getMessage();
+     return "内存溢出异常02，请分多次重试\n"+oome.getMessage();
+    }
+    
+    int cutLength=yb*xb/BL.getBL().cutCount;
+    if(cutLength==0||count2%cutLength==0)
+    {
+     try{
+      bw.write(BL.getBL().pxlsString.toString());
+      bw.flush();
+      BL.getBL().pxlsString.delete(0,BL.getBL().pxlsString.length());
+     }catch(IOException e)
+     {}
     }
     rgb[0]=0;rgb[1]=0;rgb[2]=0;
    }
@@ -83,22 +121,30 @@ public class MyTask extends AsyncTask<String,Integer,String>
    }
   }
   publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+  
   if(bp!=null&&!bp.isRecycled())
   {
    // 回收并且置为null
    bp.recycle();
    bp=null;
   }
-  String result;
   try{
-   result=String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString,BL.getBL().pxlsString.toString());
+   BL.getBL().pxlsString.append("</div></body></html>");
   }catch(OutOfMemoryError oome)
   {
-   return "内存溢出异常03，请适当调大字体大小\n"+oome.getMessage();
+   return "内存溢出异常03，请分多次重试\n"+oome.getMessage();
   }
-  String r=Utils.createHtmlFile(result,BL.getBL().outPathString);
+  
+  try{
+   bw.write(BL.getBL().pxlsString.toString());
+   bw.close();
+  }catch(IOException e)
+  {
+   return e.getMessage();
+  }
+
   publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
-  return r;
+  return "true";
  }
 
  @Override

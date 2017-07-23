@@ -6,10 +6,10 @@ import android.text.util.Linkify;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import pansong291.img2html4android.ui.Zactivity;
-import pansong291.network.Updata;
+import pansong291.network.Update;
 import android.graphics.Color;
 
-public class MyUpdata extends Updata
+public class MyUpdata extends Update
 {
  private Zactivity acti;
  private Preference process;
@@ -66,7 +66,7 @@ public class MyUpdata extends Updata
   }else if(success&&(isHasNew=getHasNew()))
   {
    dialogMessage=String.format("%1$s\n\n最新版本：%2$s\n当前版本：%3$s\n软件大小：%4$s",
-   String.format(getUpdataMessage()),
+   String.format(getUpdateMessage()),
    getNewVersion(),getOldVersion(),getFileSize());
    ntxt.setText(dialogMessage);
    showDialog();

@@ -235,6 +235,36 @@
 
 	</LinearLayout>
 
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="分次次数："
+			android:textColor="#000000"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="wrap_content"
+			android:text="1"
+			android:textColor="#000000"
+			android:gravity="center"
+			android:id="@+id/main_txt_cutcount"/>
+
+		<SeekBar
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="1.0"
+			android:id="@+id/main_skb_cutcount"/>
+
+	</LinearLayout>
+
 	<Button
 		style="?android:attr/buttonBarButtonStyle"
 		android:layout_height="wrap_content"

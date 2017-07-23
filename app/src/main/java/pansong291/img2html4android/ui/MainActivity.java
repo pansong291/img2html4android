@@ -23,6 +23,8 @@ import pansong291.img2html4android.other.MyTask;
 import pansong291.img2html4android.other.MyUpdata;
 import pansong291.img2html4android.other.MyUpdataDialogListener;
 import pansong291.img2html4android.other.Utils;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Zactivity 
 {
@@ -36,9 +38,11 @@ public class MainActivity extends Zactivity
  
  Button picPathBtn,outPathBtn,doBtn,cancelBtn;
  
- ProgressBar probar;
+ SeekBar cutCountSkb;
  
- TextView protxt;
+ ProgressBar proBar;
+ 
+ TextView cutCountTxt,proTxt;
 
  //选择路径对话框里的视图
  TextView txtCurrentPath;
@@ -77,6 +81,7 @@ public class MainActivity extends Zactivity
     .setMessage(String.format("感谢您对本应用的支持！\n本应用已成功升级到%1$s版本。\n%2$s",VERSION_NAME,getString(R.string.update_msg)))
     .setPositiveButton("确定",null)
     .show();
+   sp.edit().putInt(V_CODE,VERSION_CODE).commit();
   }else if(oldVerCode==99999999)
   {
    //用户第一次安装本应用
@@ -85,8 +90,8 @@ public class MainActivity extends Zactivity
     .setMessage(String.format("感谢您安装本应用！\n%s",getString(R.string.hello_user)))
     .setPositiveButton("确定",null)
     .show();
+   sp.edit().putInt(V_CODE,VERSION_CODE).commit();
   }
-  sp.edit().putInt(V_CODE,VERSION_CODE).commit();
   
   //公告相关
   LinearLayout llt=(LinearLayout)findViewById(R.id.main_gg);
@@ -121,9 +126,12 @@ public class MainActivity extends Zactivity
   doBtn=(Button)findViewById(R.id.main_btn_do);
   cancelBtn=(Button)findViewById(R.id.main_btn_cancel);
   
-  probar=(ProgressBar)findViewById(R.id.main_probar);
+  cutCountSkb=(SeekBar)findViewById(R.id.main_skb_cutcount);
   
-  protxt=(TextView)findViewById(R.id.main_txt_pro);
+  proBar=(ProgressBar)findViewById(R.id.main_probar);
+  
+  cutCountTxt=(TextView)findViewById(R.id.main_txt_cutcount);
+  proTxt=(TextView)findViewById(R.id.main_txt_pro);
   
   viewDialog=LayoutInflater.from(getApplication()).inflate(R.layout.dialog_choose_folder,null);
   listvPath=(ListView)viewDialog.findViewById(R.id.listview_dialog_folder);
@@ -134,6 +142,28 @@ public class MainActivity extends Zactivity
   myOnClickListener=new MyOnClickListener(this);
   viewNewFolder.setOnClickListener(myOnClickListener);
   viewGoBack.setOnClickListener(myOnClickListener);
+  
+  cutCountSkb.setMax(29);
+  cutCountSkb.setProgress(sp.getInt(CUT_COUNT,1)-1);
+  cutCountTxt.setText(cutCountSkb.getProgress()+1+"");
+  cutCountSkb.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+   {
+    @Override
+    public void onProgressChanged(SeekBar p1,int p2,boolean p3)
+    {
+     cutCountTxt.setText(p2+1+"");
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar p1)
+    {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar p1)
+    {
+    }
+   });
   
   listAdapter=new ListFolderAdapter(this);
   listvPath.setAdapter(listAdapter);
@@ -224,6 +254,7 @@ public class MainActivity extends Zactivity
   BL.getBL().fontSizeString=fontSizeEditText.getText().toString();
   BL.getBL().backColorString=backColorEditText.getText().toString();
   BL.getBL().fontTypeString=fontTypeEditText.getText().toString();
+  BL.getBL().cutCount=cutCountSkb.getProgress()+1;
   
   if(BL.getBL().isAnyOneNull())
   {
@@ -245,7 +276,8 @@ public class MainActivity extends Zactivity
   spPutString(FONT_SIZE,BL.getBL().fontSizeString);
   spPutString(BACK_COLOR,BL.getBL().backColorString);
   spPutString(FONT_TYPE,BL.getBL().fontTypeString);
-
+  sp.edit().putInt(CUT_COUNT,BL.getBL().cutCount).commit();
+    
   mt=new MyTask(this);
   mt.execute();
   
@@ -292,12 +324,12 @@ public class MainActivity extends Zactivity
  
  public ProgressBar getProgressBar()
  {
-  return probar;
+  return proBar;
  }
  
  public TextView getProtxt()
  {
-  return protxt;
+  return proTxt;
  }
  
 }

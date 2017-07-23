@@ -37,11 +37,13 @@ public class MyProclamation extends Proclamation
  @Override
  protected void thenDo(boolean success)
  {
-  if(!success||!shouldS())return;
+  if(!success)return;
   
-  //*****此处做个标记，qzGX这个参数应当为整型，以后再作修改
+  boolean isFU=getForceUpdate()<act.sp.getInt(act.V_CODE,0);
+  spe.putBoolean(act.QZGX,isFU).commit();
   
-  spe.putBoolean(act.QZGX,getForceUpdata()).commit();
+  if(!shouldS())return;
+  
   txtvw=new TextView(act);
   txtvw.setWidth(llt.getWidth());
   txtvw.setClickable(true);
@@ -82,7 +84,7 @@ public class MyProclamation extends Proclamation
  //根据时间判断是否显示
  private boolean shouldS()
  {
-  if(getLonShowTime()==0)return true;
-  return getLonShowTime()-System.currentTimeMillis()>0;
+  if(getShowTime()==0)return true;
+  return getShowTime()-System.currentTimeMillis()>0;
  }
 }
