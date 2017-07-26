@@ -34,6 +34,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
  protected String doInBackground(String[] p1)
  {
   long startTime=System.currentTimeMillis();
+  long publishTime=startTime;
   int fontSize=Integer.parseInt(BL.getBL().fontSizeString);
   
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
@@ -69,7 +70,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
   
   BL.getBL().pxlsString.append(String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString));
   
-  int cutColor,rgb[]=new int[]{0,0,0},x2,y2,max=xb*yb,count1=0,count2=0;
+  int cutColor,rgb[]=new int[]{0,0,0},x2,y2,max=xb*yb*fontSize*fontSize,count1=0,count2=0;
   
   for(int y=0;y<yb;y++)
   {
@@ -88,6 +89,13 @@ public class MyTask extends AsyncTask<String,Integer,String>
       rgb[1]+=Color.green(cutColor);
       rgb[2]+=Color.blue(cutColor);
       ++count1;
+      if(System.currentTimeMillis()-publishTime>51)
+       try{
+       publishTime=System.currentTimeMillis();
+       publishProgress(0,max,y2*xb*fontSize+x2+1,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
+      }catch(ArithmeticException ae)
+      {
+      }
      }
     }
     rgb[0]=rgb[0]/(fontSize*fontSize);
@@ -114,13 +122,8 @@ public class MyTask extends AsyncTask<String,Integer,String>
     rgb[0]=0;rgb[1]=0;rgb[2]=0;
    }
    BL.getBL().pxlsString.append("<br>");
-   try{
-    publishProgress(0,max,(y+1)*xb,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
-   }catch(ArithmeticException ae)
-   {
-   }
   }
-  publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+  publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
   
   if(bp!=null&&!bp.isRecycled())
   {
@@ -143,7 +146,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
    return e.getMessage();
   }
 
-  publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,xb*yb*fontSize*fontSize,count2,xb*yb);
+  publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
   return "true";
  }
 
@@ -154,10 +157,10 @@ public class MyTask extends AsyncTask<String,Integer,String>
   switch(values[0])
   {
    case 0:
-    str=String.format("已耗时%.3f秒\n正在获取第(%d/%d)个像素点\n已记录第(%d/%d)个像素字",values[3]/1000.0,values[4],values[5],values[6],values[7]);
+    str=String.format("已耗时%.3f秒\n正在获取第(%d/%d)个像素点\n已记录第(%d/%d)个像素字",values[3]/1000.0f,values[4],values[5],values[6],values[7]);
    break;
    case 1:
-    str=String.format("本次共耗时%.3f秒\n共获取%d个像素点\n共记录%d个像素字",values[3]/1000.0,values[5],values[7]);
+    str=String.format("本次共耗时%.3f秒\n共获取%d个像素点\n共记录%d个像素字",values[3]/1000.0f,values[5],values[7]);
    break;
   }
   ma.getProgressBar().setMax(values[1]);
