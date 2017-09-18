@@ -48,7 +48,8 @@ public class MyUpdata extends Update
  {
   showToast=b;process=v;
   if(process!=null)process.setSummary("正在检测更新中，请稍候...");
-  new Thread(myRube).start();
+  //new Thread(myRube).
+  start();
  }
  
  public void showDialog()

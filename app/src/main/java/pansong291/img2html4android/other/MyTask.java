@@ -38,6 +38,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
   int fontSize=Integer.parseInt(BL.getBL().fontSizeString);
   
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
+  if(bp==null)return "读取图片失败，请检查图片路径";
   int picWidth=bp.getWidth(),picHeight=bp.getHeight();
   int xb=picWidth/fontSize,yb=picHeight/fontSize;
   

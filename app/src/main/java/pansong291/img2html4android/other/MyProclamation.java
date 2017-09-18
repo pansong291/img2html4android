@@ -29,17 +29,17 @@ public class MyProclamation extends Proclamation
   spe=a.sp.edit();
  }
 
- public void start()
- {
-  new Thread(myRube).start();
- }
+// public void start()
+// {
+//  new Thread(myRube).start();
+// }
  
  @Override
  protected void thenDo(boolean success)
  {
   if(!success)return;
   
-  boolean isFU=getForceUpdate()<act.sp.getInt(act.V_CODE,0);
+  boolean isFU=getForceUpdate();
   spe.putBoolean(act.QZGX,isFU).commit();
   
   if(!shouldS())return;
