@@ -34,11 +34,15 @@ public class BL
  }
  
  //路径
- private String strPicPath="/storage/emulated/0/x.jpg",strOutPath="/storage/emulated/0";
+ private String strPicPath="/storage/emulated/0/x..",strOutPath="/storage/emulated/0";
  public String getPicPath(){return strPicPath;}
  public void setPicPath(String s)
  {
   strPicPath=s;
+ }
+ public String getPicName()
+ {
+  return strPicPath.substring(strPicPath.lastIndexOf("/")+1);
  }
  public String getOutPath(){return strOutPath;}
  public void setOutPath(String s)

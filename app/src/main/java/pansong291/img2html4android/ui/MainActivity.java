@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import java.io.File;
 import pansong291.img2html4android.R;
@@ -23,8 +26,6 @@ import pansong291.img2html4android.other.MyTask;
 import pansong291.img2html4android.other.MyUpdata;
 import pansong291.img2html4android.other.MyUpdataDialogListener;
 import pansong291.img2html4android.other.Utils;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Zactivity 
 {
@@ -72,22 +73,24 @@ public class MainActivity extends Zactivity
   {
   }
   
-  int oldVerCode=sp.getInt(V_CODE,99999999);
-  if(oldVerCode<VERSION_CODE)
-  {
-   //用户更新了本应用
-   new AlertDialog.Builder(this)
-    .setTitle("版本升级")
-    .setMessage(String.format("感谢您对本应用的支持！\n本应用已成功升级到%1$s版本。\n%2$s",VERSION_NAME,getString(R.string.update_msg)))
-    .setPositiveButton("确定",null)
-    .show();
-   sp.edit().putInt(V_CODE,VERSION_CODE).commit();
-  }else if(oldVerCode==99999999)
+  int oldVerCode=sp.getInt(V_CODE,-1);
+  if(oldVerCode<=0)
   {
    //用户第一次安装本应用
    new AlertDialog.Builder(this)
+    .setCancelable(false)
     .setTitle("声明")
     .setMessage(String.format("感谢您安装本应用！\n%s",getString(R.string.hello_user)))
+    .setPositiveButton("确定",null)
+    .show();
+   sp.edit().putInt(V_CODE,VERSION_CODE).commit();
+  }else if(oldVerCode<VERSION_CODE)
+  {
+   //用户更新了本应用
+   new AlertDialog.Builder(this)
+    .setCancelable(false)
+    .setTitle("版本升级")
+    .setMessage(String.format("感谢您对本应用的支持！\n本应用已成功升级到%1$s版本。\n%2$s",VERSION_NAME,getString(R.string.update_msg)))
     .setPositiveButton("确定",null)
     .show();
    sp.edit().putInt(V_CODE,VERSION_CODE).commit();
@@ -117,7 +120,7 @@ public class MainActivity extends Zactivity
   wordEditText.setText(sp.getString(WORD,"燚"));
   codeEditText.setText(sp.getString(CODE,"utf-8"));
   titleEditText.setText(sp.getString(TITLE,""));
-  fontSizeEditText.setText(sp.getString(FONT_SIZE,"10"));
+  fontSizeEditText.setText(sp.getString(FONT_SIZE,"4"));
   backColorEditText.setText(sp.getString(BACK_COLOR,"#000000"));
   fontTypeEditText.setText(sp.getString(FONT_TYPE,"monospace"));
   
@@ -144,7 +147,7 @@ public class MainActivity extends Zactivity
   viewGoBack.setOnClickListener(myOnClickListener);
   
   cutCountSkb.setMax(29);
-  cutCountSkb.setProgress(sp.getInt(CUT_COUNT,1)-1);
+  cutCountSkb.setProgress(sp.getInt(CUT_COUNT,4)-1);
   cutCountTxt.setText(cutCountSkb.getProgress()+1+"");
   cutCountSkb.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
    {
@@ -180,15 +183,15 @@ public class MainActivity extends Zactivity
       setListDataChange();
      }else if(bolIsPicPath)
      {
-      picPathEditText.setText(f.getAbsolutePath());
       BL.getBL().setPicPath(f.getAbsolutePath());
-      spPutString(PIC_PATH,BL.getBL().getPicPath());
+      picPathEditText.setText(BL.getBL().getPicPath());
       listDialog.dismiss();
      }
     }
    });
 
   listDialog=new AlertDialog.Builder(this)
+   .setCancelable(false)
    .setTitle("选择路径")
    .setView(viewDialog)
    .setNegativeButton("取消",null)
@@ -222,7 +225,6 @@ public class MainActivity extends Zactivity
      {
       BL.getBL().setOutPath(BL.getBL().getCurrentPath());
       outPathEditText.setText(BL.getBL().getOutPath());
-      spPutString(OUT_PATH,BL.getBL().getOutPath());
      }
     }
    })
@@ -233,15 +235,58 @@ public class MainActivity extends Zactivity
  public void onChoosePathClick(View v)
  {
   bolIsPicPath=(v.getId()==R.id.main_btn_picpath);
+  File ft;
   if(bolIsPicPath)
   {
-   BL.getBL().setCurrentPath(BL.getBL().getPicPath().substring(0,BL.getBL().getPicPath().lastIndexOf("/")));
+   ft=new File(picPathEditText.getText().toString());
+   if(ft.exists())
+   {
+    BL.getBL().setPicPath(ft.getAbsolutePath());
+    BL.getBL().setCurrentPath(BL.getBL().getPicPath().substring(0,BL.getBL().getPicPath().lastIndexOf("/")));
+    setListDataChange();
+    listDialog.show();
+   }else if(BL.getBL().getPicPath().endsWith("/x.."))
+   {
+    setListDataChange();
+    listDialog.show();
+   }else new AlertDialog.Builder(this)
+     .setCancelable(false)
+     .setMessage("当前文件不存在，是否恢复之前的路径？")
+     .setPositiveButton("是",new DialogInterface.OnClickListener(){
+      @Override
+      public void onClick(DialogInterface p1,int p2)
+      {
+       picPathEditText.setText(BL.getBL().getPicPath());
+      }
+     })
+     .setNegativeButton("否",null)
+     .show();
   }else
   {
-   BL.getBL().setCurrentPath(BL.getBL().getOutPath());
+   ft=new File(outPathEditText.getText().toString());
+   if(ft.exists())
+   {
+    BL.getBL().setOutPath(ft.getAbsolutePath());
+    BL.getBL().setCurrentPath(BL.getBL().getOutPath());
+    setListDataChange();
+    listDialog.show();
+   }else if(BL.getBL().getOutPath().endsWith(""))
+   {
+    setListDataChange();
+    listDialog.show();
+   }else new AlertDialog.Builder(this)
+     .setCancelable(false)
+     .setMessage("当前目录不存在，是否恢复之前的路径？")
+     .setPositiveButton("是",new DialogInterface.OnClickListener(){
+      @Override
+      public void onClick(DialogInterface p1,int p2)
+      {
+       outPathEditText.setText(BL.getBL().getOutPath());
+      }
+     })
+     .setNegativeButton("否",null)
+     .show();
   }
-  setListDataChange();
-  listDialog.show();
  }
 
  public void onDoBtnClick(View v)
@@ -256,6 +301,52 @@ public class MainActivity extends Zactivity
   BL.getBL().fontTypeString=fontTypeEditText.getText().toString();
   BL.getBL().cutCount=cutCountSkb.getProgress()+1;
   
+  String fp=BL.getBL().outPathString;
+  if(!fp.endsWith("/"))fp+="/";
+  fp+=BL.getBL().picPathString.substring(BL.getBL().picPathString.lastIndexOf("/")+1)+".html";
+  if(new File(fp).exists())
+  {
+   new AlertDialog.Builder(this)
+    .setMessage("该html文件已存在，请选择一个操作。")
+    .setPositiveButton("继续并替换",new DialogInterface.OnClickListener(){
+     @Override
+     public void onClick(DialogInterface p1,int p2)
+     {
+      doBackgroundTask();
+     }
+    })
+    .setNegativeButton("打开该文件",new DialogInterface.OnClickListener()
+     {
+      String data;
+      public DialogInterface.OnClickListener setData(String d){data=d;return this;}
+      @Override
+      public void onClick(DialogInterface p1,int p2)
+      {
+       try{
+        Intent it=new Intent();
+        it.setClassName("com.android.htmlviewer","com.android.htmlviewer.HTMLViewerActivity");
+        it.setData(Uri.parse(data));
+        startActivity(it);
+       }catch(Exception e)
+       {
+        Intent it=new Intent(Intent.ACTION_VIEW);
+        //it.setClassName("com.android.browser","com.android.browser.BrowserActivity");
+        it.addCategory(Intent.CATEGORY_DEFAULT);  
+        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        it.setDataAndType(Uri.parse(data),"text/html");
+        startActivity(Intent.createChooser(it,"选择浏览器"));
+       }
+      }
+     }.setData("file://"+fp))
+    .setNeutralButton("取消",null)
+    .show();
+   return;
+  }
+  doBackgroundTask();
+ }
+ 
+ private void doBackgroundTask()
+ {
   if(BL.getBL().isAnyOneNull())
   {
    toast("每个参数都不能为空");
@@ -269,7 +360,10 @@ public class MainActivity extends Zactivity
    toast("背景颜色参数错误");
    return;
   }
-  
+
+//  spPutString(PIC_PATH,BL.getBL().getPicPath());
+//  spPutString(OUT_PATH,BL.getBL().getOutPath());
+//  在后台任务完成后，再将path保存，保证path的正确性
   spPutString(WORD,BL.getBL().wordString);
   spPutString(CODE,BL.getBL().codeString);
   spPutString(TITLE,BL.getBL().titleString);
@@ -277,7 +371,27 @@ public class MainActivity extends Zactivity
   spPutString(BACK_COLOR,BL.getBL().backColorString);
   spPutString(FONT_TYPE,BL.getBL().fontTypeString);
   sp.edit().putInt(CUT_COUNT,BL.getBL().cutCount).commit();
-    
+  
+  if(BL.getBL().fontSizeString.equals("1")||BL.getBL().fontSizeString.equals("2"))
+  {
+   new AlertDialog.Builder(this)
+    .setCancelable(false)
+    .setTitle("注意")
+    .setMessage("当前字体大小设置过小，可能导致html无法被完全加载或者排版错乱，是否仍要继续？")
+    .setPositiveButton("继续",new DialogInterface.OnClickListener()
+    {
+     @Override
+     public void onClick(DialogInterface p1,int p2)
+     {
+      mt=new MyTask(MainActivity.this);
+      mt.execute();
+     }
+    })
+    .setNegativeButton("取消",null)
+    .show();
+   return;
+  }
+  
   mt=new MyTask(this);
   mt.execute();
   
@@ -287,7 +401,8 @@ public class MainActivity extends Zactivity
  {
   if(!mt.isCancelled())mt.cancel(true);
   
-  changeBtnVisibility();
+  //changeBtnVisibility();
+  //已在onCancelled()函数内调用
  }
  
  //重写onActivityResult以获得你需要的信息

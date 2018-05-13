@@ -203,7 +203,7 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="#000000"
 			android:text="#000000"
-			android:digits="0123456789abcdef#"
+			android:digits="0123456789abcdefABCDEF#"
 			android:maxLines="1"
 			android:maxLength="7"
 			android:id="@+id/main_edit_backcolor"/>
@@ -293,13 +293,19 @@
 		android:id="@+id/main_probar"
 		android:visibility="gone"/>
 
-	<TextView
-		android:layout_height="wrap_content"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:layout_width="match_parent"
-		android:id="@+id/main_txt_pro"
-		android:textColor="#000000"
-		android:gravity="center"/>
+	<ScrollView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:layout_width="match_parent"
+			android:id="@+id/main_txt_pro"
+			android:textColor="#000000"
+			android:gravity="center"/>
+
+	</ScrollView>
 
 </LinearLayout>
 

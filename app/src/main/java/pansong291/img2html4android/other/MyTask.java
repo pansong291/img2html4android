@@ -10,6 +10,10 @@ import java.io.File;
 import java.io.FileWriter;
 import pansong291.img2html4android.ui.MainActivity;
 import java.io.IOException;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 
 public class MyTask extends AsyncTask<String,Integer,String>
 {
@@ -33,12 +37,13 @@ public class MyTask extends AsyncTask<String,Integer,String>
  @Override
  protected String doInBackground(String[] p1)
  {
+  String result="false";
   long startTime=System.currentTimeMillis();
   long publishTime=startTime;
   int fontSize=Integer.parseInt(BL.getBL().fontSizeString);
   
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
-  if(bp==null)return "读取图片失败，请检查图片路径";
+  if(bp==null)return result+="读取图片失败，请检查图片路径";
   int picWidth=bp.getWidth(),picHeight=bp.getHeight();
   int xb=picWidth/fontSize,yb=picHeight/fontSize;
   
@@ -50,23 +55,29 @@ public class MyTask extends AsyncTask<String,Integer,String>
    BL.getBL().pxlsString=new StringBuilder(strBlderLength);
   }catch(OutOfMemoryError oome)
   {
-   return "内存溢出异常01，请分多次重试\n"+oome.getMessage();
+   return result+="内存溢出异常01，请分多次重试\n"+oome.getMessage();
   }
   
   File dir=new File(BL.getBL().outPathString);
   if(!dir.exists())
   {
-   dir.mkdir();
+   if(!dir.mkdir())return result+="输出文件夹创建失败";
+   result+="输出文件夹创建成功\n";
   }
 
-  BL.getBL().fileNameString="Img_"+System.currentTimeMillis()+".html";
+  BL.getBL().fileNameString=BL.getBL().getPicName()+".html";
   File file=new File(dir,BL.getBL().fileNameString);
+  if(file.exists())
+  {
+   if(!file.delete())return result+="旧文件删除失败";
+   result+="旧文件删除成功\n";
+  }
   BufferedWriter bw=null;
   try{
    bw=new BufferedWriter(new FileWriter(file));
   }catch(IOException e)
   {
-   return "无法写入外部文件\n"+e.getMessage();
+   return result+="无法写入外部文件\n"+e.getMessage();
   }
   
   BL.getBL().pxlsString.append(String.format(BL.getBL().htmlString,BL.getBL().codeString,BL.getBL().titleString,2*picWidth+"px",BL.getBL().fontSizeString+"px",BL.getBL().backColorString,BL.getBL().fontTypeString));
@@ -81,7 +92,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
     {
      for(int x1=0;x1<fontSize;x1++)
      {
-      if(isCancelled())return "取消操作";
+      if(isCancelled())return result+="已取消操作";
       x2=x*fontSize+x1;y2=y*fontSize+y1;
       if(x2>=picWidth||y2>=picHeight)
        continue;
@@ -92,11 +103,12 @@ public class MyTask extends AsyncTask<String,Integer,String>
       ++count1;
       if(System.currentTimeMillis()-publishTime>51)
        try{
-       publishTime=System.currentTimeMillis();
-       publishProgress(0,max,y2*xb*fontSize+x2+1,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
-      }catch(ArithmeticException ae)
-      {
-      }
+        publishTime=System.currentTimeMillis();
+        //publishProgress(-1,x2,y2,picWidth,picHeight,xb,yb,y2*xb*fontSize+x2+1,max,count1,count2);
+        publishProgress(0,max,y2*xb*fontSize+x2+1,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
+       }catch(ArithmeticException ae)
+       {
+       }
      }
     }
     rgb[0]=rgb[0]/(fontSize*fontSize);
@@ -107,7 +119,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
      BL.getBL().pxlsString.append(String.format(BL.getBL().pixelString,rgb[0],rgb[1],rgb[2],BL.getBL().wordString));
     }catch(OutOfMemoryError oome)
     {
-     return "内存溢出异常02，请分多次重试\n"+oome.getMessage();
+     return result+="内存溢出异常02，请分多次重试\n"+oome.getMessage();
     }
     
     int cutLength=yb*xb/BL.getBL().cutCount;
@@ -124,8 +136,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
    }
    BL.getBL().pxlsString.append("<br>");
   }
-  publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
-  
+  //publishProgress(0,max,max,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
   if(bp!=null&&!bp.isRecycled())
   {
    // 回收并且置为null
@@ -136,7 +147,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
    BL.getBL().pxlsString.append("</div></body></html>");
   }catch(OutOfMemoryError oome)
   {
-   return "内存溢出异常03，请分多次重试\n"+oome.getMessage();
+   return result+="内存溢出异常03，请分多次重试\n"+oome.getMessage();
   }
   
   try{
@@ -144,11 +155,12 @@ public class MyTask extends AsyncTask<String,Integer,String>
    bw.close();
   }catch(IOException e)
   {
-   return e.getMessage();
+   return result+=e.getMessage();
   }
 
-  publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,max,count2,xb*yb);
-  return "true";
+  publishProgress(1,max,max,(int)(System.currentTimeMillis()-startTime),count1,count2);
+  result=result.replace("false","true")+"写入外部文件成功\n";
+  return result;
  }
 
  @Override
@@ -157,14 +169,18 @@ public class MyTask extends AsyncTask<String,Integer,String>
   String str="";
   switch(values[0])
   {
+   case -1:
+    str=String.format("x2=%d,y2=%d\npicW=%d,picH=%d\nxb=%d,yb=%d\np=%d,m=%d\n像素:%d,字:%d",values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],values[9],values[10]);
+   break;
    case 0:
     str=String.format("已耗时%.3f秒\n正在获取第(%d/%d)个像素点\n已记录第(%d/%d)个像素字",values[3]/1000.0f,values[4],values[5],values[6],values[7]);
    break;
    case 1:
-    str=String.format("本次共耗时%.3f秒\n共获取%d个像素点\n共记录%d个像素字",values[3]/1000.0f,values[5],values[7]);
+    str=String.format("本次共耗时%.3f秒\n共获取%d个像素点\n共记录%d个像素字",values[3]/1000.0f,values[4],values[5]);
    break;
   }
-  ma.getProgressBar().setMax(values[1]);
+  if(ma.getProgressBar().getMax()!=values[1])
+   ma.getProgressBar().setMax(values[1]);
   ma.getProgressBar().setProgress(values[2]);
   ma.getProtxt().setText(str);
   
@@ -173,22 +189,58 @@ public class MyTask extends AsyncTask<String,Integer,String>
  @Override
  protected void onCancelled(String result)
  {
-  ma.getProtxt().append("\n已"+result);
+  ma.getProtxt().append("\n"+result.substring(result.indexOf("e")+1));
+  ma.changeBtnVisibility();
  }
 
  @Override
  protected void onPostExecute(String result)
  {
-  if(result.equals("true"))
+  String msg=result.substring(result.indexOf("e")+1);
+  if(result.startsWith("true"))
   {
-   ma.getProtxt().append("\nHTML生成完毕，链接已复制到剪贴板，请在浏览器中粘贴打开");
+   ma.getProtxt().append("\n"+msg+"\nHTML生成完毕，链接已复制到剪贴板，请在浏览器中粘贴打开");
+   String filePath="file://"+BL.getBL().outPathString+"/"+BL.getBL().fileNameString;
    ClipboardManager cm=(ClipboardManager)ma.getSystemService(ma.CLIPBOARD_SERVICE);
-   cm.setText("file://"+BL.getBL().outPathString+"/"+BL.getBL().fileNameString);
+   cm.setText(filePath);
+   new AlertDialog.Builder(ma)
+    .setTitle("生成完毕")
+    .setMessage("HTML生成完毕，链接已复制到剪贴板，您可以在浏览器中粘贴打开，也可以现在选择直接打开。")
+    .setCancelable(false)
+    .setPositiveButton("直接打开",new DialogInterface.OnClickListener()
+    {
+     String data;
+     public DialogInterface.OnClickListener setData(String d){data=d;return this;}
+     @Override
+     public void onClick(DialogInterface p1,int p2)
+     {
+      try{
+       Intent it=new Intent();
+       it.setClassName("com.android.htmlviewer","com.android.htmlviewer.HTMLViewerActivity");
+       it.setData(Uri.parse(data));
+       ma.startActivity(it);
+      }catch(Exception e)
+      {
+       Intent it=new Intent(Intent.ACTION_VIEW);
+       //it.setClassName("com.android.browser","com.android.browser.BrowserActivity");
+       it.addCategory(Intent.CATEGORY_DEFAULT);  
+       it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+       it.setDataAndType(Uri.parse(data),"text/html");
+       ma.startActivity(Intent.createChooser(it,"选择浏览器"));
+      }
+     }
+    }.setData(filePath))
+    .setNegativeButton("取消",null)
+    .show();
+    BL.getBL().setPicPath(BL.getBL().picPathString);
+    ma.spPutString(MainActivity.PIC_PATH,BL.getBL().getPicPath());
   }else
   {
-   ma.getProtxt().append("\n生成失败\n"+result);
+   ma.getProtxt().append("\n生成失败\n"+msg);
   }
   ma.changeBtnVisibility();
+  BL.getBL().setOutPath(BL.getBL().outPathString);
+  ma.spPutString(MainActivity.OUT_PATH,BL.getBL().getOutPath());
  }
  
  
