@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:gravity="center">
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="Single"
+		android:onClick="onSingleClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="Multiple"
+		android:onClick="onMultipleClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="MultipleIncludeOwn"
+		android:onClick="onMultipleIncludeOwnClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="MultipleProgrammatic"
+		android:onClick="onMultipleProgrammaticClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="SingleFragment"
+		android:onClick="onSingleFragmentClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="MultipleFragment"
+		android:onClick="onMultipleFragmentClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="MultipleIncludeOwnFragment"
+		android:onClick="onMultipleIncludeOwnFragmentClick"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="MultipleProgrammaticFragment"
+		android:onClick="onMultipleProgrammaticFragmentClick"/>
+
+</LinearLayout>
+

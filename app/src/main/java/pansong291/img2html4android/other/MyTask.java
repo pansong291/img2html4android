@@ -40,7 +40,7 @@ public class MyTask extends AsyncTask<String,Integer,String>
   String result="false";
   long startTime=System.currentTimeMillis();
   long publishTime=startTime;
-  int fontSize=Integer.parseInt(BL.getBL().fontSizeString);
+  int fontSize=BL.getBL().fontSizeInteger;
   
   Bitmap bp=BitmapFactory.decodeFile(BL.getBL().picPathString);
   if(bp==null)return result+="读取图片失败，请检查图片路径";

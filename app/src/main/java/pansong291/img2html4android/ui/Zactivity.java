@@ -1,13 +1,17 @@
 package pansong291.img2html4android.ui;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import pansong291.crash.ASControl;
 
-public class Zactivity extends Activity
+public class Zactivity extends AppCompatActivity
 {
+
  public static final String PIC_PATH="picPath",OUT_PATH="outPath",
         WORD="word",CODE="code",TITLE="title",
         FONT_SIZE="fontSize",BACK_COLOR="backColor",
@@ -43,6 +47,12 @@ public class Zactivity extends Activity
   super.onDestroy();
   ASControl.getASControl().removeActivity(this);
  }
+
+ //@Override
+ //public void onPointerCaptureChanged(boolean hasCapture)
+ //{
+  // TODO: Implement this method
+ //}
  
  public void toast(String s)
  {
@@ -52,6 +62,36 @@ public class Zactivity extends Activity
  public void toast(String s,int i)
  {
   Toast.makeText(this,s,i).show();
+ }
+ 
+ public void snack(String s)
+ {
+  snack(((ViewGroup)findViewById(android.R.id.content)).getChildAt(0),s);
+ }
+ 
+ public void snack(View v,String s)
+ {
+  snack(v,s,Snackbar.LENGTH_LONG);
+ }
+ 
+ public void snack(View v,String s,int i)
+ {
+  Snackbar.make(v,s,i).show();
+ }
+
+ public void snack(String s,String text,View.OnClickListener listener)
+ {
+  snack(((ViewGroup)findViewById(android.R.id.content)).getChildAt(0),s,Snackbar.LENGTH_SHORT,text,listener);
+ }
+ 
+ public void snack(View v,String s,String text,View.OnClickListener listener)
+ {
+  snack(v,s,Snackbar.LENGTH_LONG,text,listener);
+ }
+ 
+ public void snack(View v,String s,int i,String text,View.OnClickListener listener)
+ {
+  Snackbar.make(v,s,i).setAction(text,listener).show();
  }
  
 }

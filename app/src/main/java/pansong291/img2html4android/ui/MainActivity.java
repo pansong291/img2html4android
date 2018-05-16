@@ -7,32 +7,51 @@ import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import de.psdev.licensesdialog.LicensesDialog;
+import de.psdev.licensesdialog.LicenseResolver;
 import java.io.File;
 import pansong291.img2html4android.R;
 import pansong291.img2html4android.other.BL;
 import pansong291.img2html4android.other.MyProclamation;
 import pansong291.img2html4android.other.MyTask;
-import pansong291.img2html4android.other.MyUpdata;
-import pansong291.img2html4android.other.MyUpdataDialogListener;
+import pansong291.img2html4android.other.MyUpdate;
+import pansong291.img2html4android.other.MyUpdateDialogListener;
 import pansong291.img2html4android.other.Utils;
+import pansong291.img2html4android.other.AndroidMaterialIconGeneratorLicense;
+import pansong291.img2html4android.other.GoogleMaterialIconsLicense;
 
 public class MainActivity extends Zactivity 
 {
  int VERSION_CODE;
  String VERSION_NAME;
  
+ //界面视图
+ DrawerLayout drawerLayout;
+ NavigationView navigationView;
+ ActionBarDrawerToggle actionBarDrawerToggle;
+ Toolbar toolbar;
+ 
  //主视图控件
+ TextInputLayout picPathInputLayout,outPathInputLayout,
+ wordInputLayout,codeInputLayout,titleInputLayout,fontSizeInputLayout,
+ backColorInputLayout,fontTypeInputLayout;
  EditText picPathEditText,outPathEditText,
  wordEditText,codeEditText,titleEditText,fontSizeEditText,
  backColorEditText,fontTypeEditText;
@@ -49,7 +68,7 @@ public class MainActivity extends Zactivity
  TextView txtCurrentPath;
  View viewDialog,viewGoBack,viewNewFolder;
  AlertDialog listDialog;
- ListView listvPath;
+ RecyclerView listvPath;
  ListFolderAdapter listAdapter;
  MyOnClickListener myOnClickListener;
 
@@ -59,11 +78,84 @@ public class MainActivity extends Zactivity
  //后台任务
  MyTask mt;
  
+ MyUpdate myUpdate=null;
+ 
  @Override
  protected void onCreate(Bundle savedInstanceState)
  {
   super.onCreate(savedInstanceState);
   setContentView(R.layout.activity_main);
+  
+  toolbar=(Toolbar)findViewById(R.id.main_v7_toolbar);
+  setSupportActionBar(toolbar);
+
+  drawerLayout=(DrawerLayout)findViewById(R.id.main_drawerlayout);
+  navigationView=(NavigationView)findViewById(R.id.main_nav);
+  
+  //这两句显示左边的三条杠
+  getSupportActionBar().setHomeButtonEnabled(true);
+  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+  actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
+
+  //这两句实现toolbar和Drawer的联动：图标随着侧滑菜单的开关而变换
+  actionBarDrawerToggle.syncState();
+  drawerLayout.addDrawerListener(actionBarDrawerToggle);
+  
+  navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+  {
+   @Override
+   public boolean onNavigationItemSelected(MenuItem item)
+   {
+    //toast(item.getTitle().toString());
+    //drawerLayout.closeDrawer(navigationView);
+    
+    switch(item.getItemId())
+    {
+     case R.id.menu_help:
+      new AlertDialog.Builder(MainActivity.this)
+       .setIcon(R.drawable.ic_help)
+       .setTitle("帮助")
+       .setMessage(R.string.help_user)
+       .setPositiveButton("确定",null)
+       .show();
+      break;
+     case R.id.menu_about:
+      new AlertDialog.Builder(MainActivity.this)
+       .setIcon(R.drawable.ic_info)
+       .setTitle("关于")
+       .setMessage(R.string.about_msg)
+       .setPositiveButton("确定",null)
+       .show();
+      break;
+     case R.id.menu_openresource:
+      //Intent it=new Intent(MainActivity.this,TestActivity.class);
+      //startActivity(it);
+      
+      LicenseResolver.registerLicense(new AndroidMaterialIconGeneratorLicense());
+      LicenseResolver.registerLicense(new GoogleMaterialIconsLicense());
+      
+      new LicensesDialog.Builder(MainActivity.this)
+       .setTitle("开放源代码许可")
+       .setCloseText("确定")
+       .setNotices(R.raw.notices)
+       .setIncludeOwnLicense(true)
+       .build()
+       .show();
+      break;
+     case R.id.menu_version:
+      if(myUpdate==null)
+      {
+       myUpdate=new MyUpdate(MainActivity.this,"R39j6on",new MyUpdateDialogListener(MainActivity.this));
+       myUpdate.setCurrentVersion(VERSION_NAME);
+      }
+      myUpdate.checkNow(true,item);
+      break;
+    }
+    
+    return true;
+   }
+  });
   
   try{
    PackageInfo pi=getPackageManager().getPackageInfo(getPackageName(),0);
@@ -79,6 +171,7 @@ public class MainActivity extends Zactivity
    //用户第一次安装本应用
    new AlertDialog.Builder(this)
     .setCancelable(false)
+    .setIcon(R.drawable.ic_info)
     .setTitle("声明")
     .setMessage(String.format("感谢您安装本应用！\n%s",getString(R.string.hello_user)))
     .setPositiveButton("确定",null)
@@ -89,6 +182,7 @@ public class MainActivity extends Zactivity
    //用户更新了本应用
    new AlertDialog.Builder(this)
     .setCancelable(false)
+    .setIcon(R.drawable.ic_update)
     .setTitle("版本升级")
     .setMessage(String.format("感谢您对本应用的支持！\n本应用已成功升级到%1$s版本。\n%2$s",VERSION_NAME,getString(R.string.update_msg)))
     .setPositiveButton("确定",null)
@@ -98,26 +192,34 @@ public class MainActivity extends Zactivity
   
   //公告相关
   LinearLayout llt=(LinearLayout)findViewById(R.id.main_gg);
-  new MyProclamation(this,"RyOATtQ",llt).start();
+  new MyProclamation(this,"R39YCNj",llt).start();
   
   //更新相关
   if(sp.getBoolean("自动检查更新的选项",true)||sp.getBoolean(QZGX,false))
-   new MyUpdata(this,"RyOAlwR",new MyUpdataDialogListener(this)).checkNow(false,null);
+   new MyUpdate(this,"R39j6on",new MyUpdateDialogListener(this)).checkNow(false,null);
   
-  picPathEditText=(EditText)findViewById(R.id.main_edit_picpath);
-  outPathEditText=(EditText)findViewById(R.id.main_edit_outpath);
-  wordEditText=(EditText)findViewById(R.id.main_edit_word);
-  codeEditText=(EditText)findViewById(R.id.main_edit_code);
-  titleEditText=(EditText)findViewById(R.id.main_edit_title);
-  fontSizeEditText=(EditText)findViewById(R.id.main_edit_fontsize);
-  backColorEditText=(EditText)findViewById(R.id.main_edit_backcolor);
-  fontTypeEditText=(EditText)findViewById(R.id.main_edit_fonttype);
+  picPathInputLayout=(TextInputLayout)findViewById(R.id.main_edit_picpath);
+  picPathEditText=picPathInputLayout.getEditText();
+  outPathInputLayout=(TextInputLayout)findViewById(R.id.main_edit_outpath);
+  outPathEditText=outPathInputLayout.getEditText();
+  wordInputLayout=(TextInputLayout)findViewById(R.id.main_edit_word);
+  wordEditText=wordInputLayout.getEditText();
+  codeInputLayout=(TextInputLayout)findViewById(R.id.main_edit_code);
+  codeEditText=codeInputLayout.getEditText();
+  titleInputLayout=(TextInputLayout)findViewById(R.id.main_edit_title);
+  titleEditText=titleInputLayout.getEditText();
+  fontSizeInputLayout=(TextInputLayout)findViewById(R.id.main_edit_fontsize);
+  fontSizeEditText=fontSizeInputLayout.getEditText();
+  backColorInputLayout=(TextInputLayout)findViewById(R.id.main_edit_backcolor);
+  backColorEditText=backColorInputLayout.getEditText();
+  fontTypeInputLayout=(TextInputLayout)findViewById(R.id.main_edit_fonttype);
+  fontTypeEditText=fontTypeInputLayout.getEditText();
   
   picPathEditText.setText(sp.getString(PIC_PATH,""));
   outPathEditText.setText(sp.getString(OUT_PATH,""));
   if(!picPathEditText.getText().toString().equals(""))BL.getBL().setPicPath(picPathEditText.getText().toString());
   if(!outPathEditText.getText().toString().equals(""))BL.getBL().setOutPath(outPathEditText.getText().toString());
-  wordEditText.setText(sp.getString(WORD,"燚"));
+  wordEditText.setText(sp.getString(WORD,"龍"));
   codeEditText.setText(sp.getString(CODE,"utf-8"));
   titleEditText.setText(sp.getString(TITLE,""));
   fontSizeEditText.setText(sp.getString(FONT_SIZE,"4"));
@@ -137,13 +239,14 @@ public class MainActivity extends Zactivity
   proTxt=(TextView)findViewById(R.id.main_txt_pro);
   
   viewDialog=LayoutInflater.from(getApplication()).inflate(R.layout.dialog_choose_folder,null);
-  listvPath=(ListView)viewDialog.findViewById(R.id.listview_dialog_folder);
+  listvPath=(RecyclerView)viewDialog.findViewById(R.id.recyclerview_dialog_folder);
   txtCurrentPath=(TextView)viewDialog.findViewById(R.id.textview_dialog_current_folder);
   viewGoBack=viewDialog.findViewById(R.id.linearlayout_dialog_goback);
   viewNewFolder=viewDialog.findViewById(R.id.imageview_dialog_new_folder);
 
   myOnClickListener=new MyOnClickListener(this);
   viewNewFolder.setOnClickListener(myOnClickListener);
+  //viewGoBack.setOnTouchListener(myOnClickListener.new RippleForegroundListener(viewGoBack));
   viewGoBack.setOnClickListener(myOnClickListener);
   
   cutCountSkb.setMax(29);
@@ -168,14 +271,21 @@ public class MainActivity extends Zactivity
     }
    });
   
+  LinearLayoutManager llManager=new LinearLayoutManager(this);
+  listvPath.setLayoutManager(llManager);
+  //确定每个item高度固定时，设置为true可以提高性能
+  listvPath.setHasFixedSize(true);
+   
   listAdapter=new ListFolderAdapter(this);
   listvPath.setAdapter(listAdapter);
-  listvPath.setOnItemClickListener(new AdapterView.OnItemClickListener()
+  //设置分隔线  
+  //listvPath.addItemDecoration(new DividerGridItemDecoration(this));
+  listAdapter.setOnItemClickListener(new ListFolderAdapter.OnItemClickListener()
    {
     @Override
-    public void onItemClick(AdapterView<?> p1,View p2,int p3,long p4)
+    public void onItemClick(View p1,int p2)
     {
-     String fn=listAdapter.getFolderInfo(p3);
+     String fn=listAdapter.getFolderInfo(p2);
      File f=new File(BL.getBL().getCurrentPath()+"/"+fn);
      if(f.isDirectory())
      {
@@ -202,7 +312,7 @@ public class MainActivity extends Zactivity
     {
      if(!bolIsPicPath)
      {
-      toast("请点击确定来选取输出路径");
+      snack("请点击确定来选取输出路径");
       return;
      }
      //调用其它文件选择器选择视频
@@ -220,7 +330,7 @@ public class MainActivity extends Zactivity
     {
      if(bolIsPicPath)
      {
-      toast("你未选择有效的图片文件");
+      snack("你未选择有效的图片文件");
      }else
      {
       BL.getBL().setOutPath(BL.getBL().getCurrentPath());
@@ -349,15 +459,15 @@ public class MainActivity extends Zactivity
  {
   if(BL.getBL().isAnyOneNull())
   {
-   toast("每个参数都不能为空");
+   snack("所有参数都不能为空");
    return;
-  }else if(BL.getBL().fontSizeString.equals("0"))
+  }else if(1>(BL.getBL().fontSizeInteger=Integer.parseInt(BL.getBL().fontSizeString)))
   {
-   toast("字体大小不能为0");
+   fontSizeEditText.setError("字体大小不能小于1");
    return;
   }else if(BL.getBL().backColorString.lastIndexOf("#")!=0||BL.getBL().backColorString.length()<7)
   {
-   toast("背景颜色参数错误");
+   backColorInputLayout.setError("背景颜色参数错误");
    return;
   }
 
@@ -372,7 +482,7 @@ public class MainActivity extends Zactivity
   spPutString(FONT_TYPE,BL.getBL().fontTypeString);
   sp.edit().putInt(CUT_COUNT,BL.getBL().cutCount).commit();
   
-  if(BL.getBL().fontSizeString.equals("1")||BL.getBL().fontSizeString.equals("2"))
+  if(BL.getBL().fontSizeInteger<=3)
   {
    new AlertDialog.Builder(this)
     .setCancelable(false)
@@ -420,7 +530,7 @@ public class MainActivity extends Zactivity
    listDialog.dismiss();
   }else if(resultCode==RESULT_OK)
   {
-   toast("请重新选择图片");
+   snack("请重新选择图片");
   }
  }
  
@@ -446,5 +556,13 @@ public class MainActivity extends Zactivity
  {
   return proTxt;
  }
+
+ /***
+ @Override
+ public void snack(String s)
+ {
+  snack(drawerLayout.getChildAt(0),s);
+ }
+ /***/
  
 }

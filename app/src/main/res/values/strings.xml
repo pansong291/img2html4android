@@ -2,10 +2,11 @@
 <resources>
 
     <string name="app_name">Img2Html4Android</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
     <string name="hello_user">本应用根据github用户xlzd的img2html开源项目改编，原项目地址：\nhttps://github.com/xlzd/img2html</string>
     <string name="update_msg">1.0.1-beta\n\n*修复点击浏览按钮崩溃问题\n*解决内存溢出问题\n\n1.0-beta版诞生\n\n*本应用根据github用户xlzd的img2html开源项目改编，原项目地址：\nhttps://github.com/xlzd/img2html\n*优化算法，提升生成速度</string>
+    <string name="help_user">如若选择的图片过大，请尽量调大字体大小，否则可能导致生成的html文件过大，进而使浏览器加载缓慢甚至加载失败，由于时间仓促，没有对大图片做压缩处理，还请谅解。</string>
+    <string name="about_msg">＠pansong291编写代码</string>
 
-    <color name="color_alpha">#00000000</color>
-    <color name="color_btn_down">#9934b6e4</color>
-    
 </resources>

@@ -6,17 +6,17 @@ import android.net.Uri;
 import pansong291.crash.ASControl;
 import pansong291.img2html4android.ui.Zactivity;
 
-public class MyUpdataDialogListener implements DialogInterface.OnClickListener
+public class MyUpdateDialogListener implements DialogInterface.OnClickListener
 {
  Zactivity act;
- MyUpdata upd;
+ MyUpdate upd;
  
- public MyUpdataDialogListener(Zactivity a)
+ public MyUpdateDialogListener(Zactivity a)
  {
   act=a;
  }
  
- public void setUpDa(MyUpdata u)
+ public void setUpDa(MyUpdate u)
  {
   upd=u;
  }

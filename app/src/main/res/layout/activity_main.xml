@@ -1,311 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical"
-	android:padding="10dp"
-	android:gravity="center_horizontal">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/main_drawerlayout"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:id="@+id/main_gg"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
 
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="图片路径："
-			android:textColor="#000000"/>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/main_v7_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:maxLines="2"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:id="@+id/main_edit_picpath"/>
+            </android.support.design.widget.AppBarLayout>
+            
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                
+                <include
+                    layout="@layout/content_main"/>
+                
+            </android.support.v4.widget.NestedScrollView>
+            
+        </LinearLayout>
 
-		<Button
-			style="?android:attr/buttonBarButtonStyle"
-			android:layout_height="match_parent"
-			android:layout_width="wrap_content"
-			android:text="浏览"
-			android:onClick="onChoosePathClick"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:id="@+id/main_btn_picpath"/>
+        <android.support.design.widget.NavigationView
+	        android:id="@+id/main_nav"
+	        android:layout_gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:headerLayout="@layout/main_nav_head"
+            app:menu="@menu/main_nav_menu"/>
+        
+    </android.support.v4.widget.DrawerLayout>
 
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="输出路径："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:maxLines="2"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:id="@+id/main_edit_outpath"/>
-
-		<Button
-			style="?android:attr/buttonBarButtonStyle"
-			android:layout_height="match_parent"
-			android:layout_width="wrap_content"
-			android:text="浏览"
-			android:onClick="onChoosePathClick"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:id="@+id/main_btn_outpath"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="像素文字："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:text="燚"
-			android:maxLength="1"
-			android:maxLines="1"
-			android:id="@+id/main_edit_word"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="网页编码："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:text="utf-8"
-			android:maxLines="1"
-			android:id="@+id/main_edit_code"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="网页标题："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:text="TITLE"
-			android:maxLines="1"
-			android:id="@+id/main_edit_title"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="字体大小："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:text="10"
-			android:digits="1234567890"
-			android:maxLines="1"
-			android:id="@+id/main_edit_fontsize"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="背景颜色："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:text="#000000"
-			android:digits="0123456789abcdefABCDEF#"
-			android:maxLines="1"
-			android:maxLength="7"
-			android:id="@+id/main_edit_backcolor"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="字体样式："
-			android:textColor="#000000"/>
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="#000000"
-			android:text="monospace"
-			android:maxLines="1"
-			android:id="@+id/main_edit_fonttype"/>
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:gravity="center_vertical">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="分次次数："
-			android:textColor="#000000"/>
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:text="1"
-			android:textColor="#000000"
-			android:gravity="center"
-			android:id="@+id/main_txt_cutcount"/>
-
-		<SeekBar
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"
-			android:id="@+id/main_skb_cutcount"/>
-
-	</LinearLayout>
-
-	<Button
-		style="?android:attr/buttonBarButtonStyle"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:text="生成HTML"
-		android:onClick="onDoBtnClick"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:textColor="#000000"
-		android:id="@+id/main_btn_do"/>
-
-	<Button
-		style="?android:attr/buttonBarButtonStyle"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:text="取消"
-		android:onClick="onCancelBtnClick"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:textColor="#000000"
-		android:id="@+id/main_btn_cancel"
-		android:visibility="gone"/>
-
-	<ProgressBar
-		style="?android:attr/progressBarStyleHorizontal"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:id="@+id/main_probar"
-		android:visibility="gone"/>
-
-	<ScrollView
-		android:layout_height="match_parent"
-		android:layout_width="match_parent">
-
-		<TextView
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:layout_width="match_parent"
-			android:id="@+id/main_txt_pro"
-			android:textColor="#000000"
-			android:gravity="center"/>
-
-	</ScrollView>
-
-</LinearLayout>
-
+</android.support.design.widget.CoordinatorLayout>
+ 

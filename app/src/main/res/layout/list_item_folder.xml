@@ -5,7 +5,9 @@
 	android:layout_height="wrap_content"
 	android:orientation="horizontal"
 	android:gravity="center_vertical"
-	android:background="@drawable/button_background">
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
 	<ImageView
 		android:layout_height="40dp"
@@ -19,7 +21,8 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:layout_weight="1.0"
 		android:id="@+id/textview_list_item"
-		android:textColor="#000000"/>
+		android:textColor="#000000"
+		android:maxLines="2"/>
 
 </LinearLayout>
 

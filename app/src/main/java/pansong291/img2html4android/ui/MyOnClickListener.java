@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,5 +54,47 @@ public class MyOnClickListener implements View.OnClickListener
    m.setListDataChange();
   }
  }
+ 
+ /*
+ public class RippleForegroundListener implements View.OnTouchListener
+ {
+  View view;
 
+  public RippleForegroundListener(View view)
+  {
+   this.view=view;
+  }
+
+  @Override
+  public boolean onTouch(View v, MotionEvent event)
+  {
+   // Convert to card view coordinates. Assumes the host view is
+   // a direct child and the card view is not scrollable.
+   float x = event.getX() + v.getLeft();
+   float y = event.getY() + v.getTop();
+
+   if(android.os.Build.VERSION.SDK_INT>=21)
+   {
+    // Simulate motion on the card view.
+    view.drawableHotspotChanged(x, y);
+   }
+
+   // Simulate pressed state on the card view.
+   switch (event.getActionMasked())
+   {
+    case MotionEvent.ACTION_DOWN:
+     view.setPressed(true);
+     break;
+    case MotionEvent.ACTION_UP:
+    case MotionEvent.ACTION_CANCEL:
+     view.setPressed(false);
+     break;
+   }
+
+   // Pass all events through to the host view.
+   return false;
+  }
+ }
+ */
+ 
 }
